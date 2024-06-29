@@ -19,26 +19,26 @@ from Utility.storage_config import MODELS_DIR
 class CodecAlignerDataset(Dataset):
 
     def __init__(
-        self,
-        path_to_transcript_dict,
-        cache_dir,
-        lang,
-        loading_processes,
-        device,
-        min_len_in_seconds=1,
-        max_len_in_seconds=15,
-        rebuild_cache=False,
-        verbose=False,
-        phone_input=False,
-        allow_unknown_symbols=False,
-        gpu_count=1,
-        rank=0,
+            self,
+            path_to_transcript_dict,
+            cache_dir,
+            lang,
+            loading_processes,
+            device,
+            min_len_in_seconds=1,
+            max_len_in_seconds=15,
+            rebuild_cache=False,
+            verbose=False,
+            phone_input=False,
+            allow_unknown_symbols=False,
+            gpu_count=1,
+            rank=0,
     ):
         self.gpu_count = gpu_count
         self.rank = rank
         if (
-            not os.path.exists(os.path.join(cache_dir, "aligner_train_cache.pt"))
-            or rebuild_cache
+                not os.path.exists(os.path.join(cache_dir, "aligner_train_cache.pt"))
+                or rebuild_cache
         ):
             self._build_dataset_cache(
                 path_to_transcript_dict=path_to_transcript_dict,
@@ -71,29 +71,29 @@ class CodecAlignerDataset(Dataset):
                 )  # a bit unfortunate, but if you're using multiple GPUs, you probably have a ton of datapoints anyway.
             chunksize = int(len(self.datapoints) / self.gpu_count)
             self.datapoints = self.datapoints[
-                chunksize * self.rank : chunksize * (self.rank + 1)
-            ]
+                              chunksize * self.rank: chunksize * (self.rank + 1)
+                              ]
             self.speaker_embeddings = self.speaker_embeddings[
-                chunksize * self.rank : chunksize * (self.rank + 1)
-            ]
+                                      chunksize * self.rank: chunksize * (self.rank + 1)
+                                      ]
         print(
             f"Loaded an Aligner dataset with {len(self.datapoints)} datapoints from {cache_dir}."
         )
 
     def _build_dataset_cache(
-        self,
-        path_to_transcript_dict,
-        cache_dir,
-        lang,
-        loading_processes,
-        device,
-        min_len_in_seconds=1,
-        max_len_in_seconds=15,
-        verbose=False,
-        phone_input=False,
-        allow_unknown_symbols=False,
-        gpu_count=1,
-        rank=0,
+            self,
+            path_to_transcript_dict,
+            cache_dir,
+            lang,
+            loading_processes,
+            device,
+            min_len_in_seconds=1,
+            max_len_in_seconds=15,
+            verbose=False,
+            phone_input=False,
+            allow_unknown_symbols=False,
+            gpu_count=1,
+            rank=0,
     ):
         if gpu_count != 1:
             import sys
@@ -112,7 +112,7 @@ class CodecAlignerDataset(Dataset):
         self.path_to_transcript_dict = resource_manager.dict(path_to_transcript_dict)
         key_list = list(self.path_to_transcript_dict.keys())
         with open(
-            os.path.join(cache_dir, "files_used.txt"), encoding="utf8", mode="w"
+                os.path.join(cache_dir, "files_used.txt"), encoding="utf8", mode="w"
         ) as files_used_note:
             files_used_note.write(str(key_list))
         fisher_yates_shuffle(key_list)
@@ -125,11 +125,11 @@ class CodecAlignerDataset(Dataset):
         for i in range(loading_processes):
             key_splits.append(
                 key_list[
-                    i
-                    * len(key_list)
-                    // loading_processes : (i + 1)
-                    * len(key_list)
-                    // loading_processes
+                i
+                * len(key_list)
+                // loading_processes: (i + 1)
+                                      * len(key_list)
+                                      // loading_processes
                 ]
             )
         for key_split in key_splits:
@@ -203,15 +203,15 @@ class CodecAlignerDataset(Dataset):
         )
 
     def _cache_builder_process(
-        self,
-        path_list,
-        lang,
-        min_len,
-        max_len,
-        verbose,
-        device,
-        phone_input,
-        allow_unknown_symbols,
+            self,
+            path_list,
+            lang,
+            min_len,
+            max_len,
+            verbose,
+            device,
+            phone_input,
+            allow_unknown_symbols,
     ):
         process_internal_dataset_chunk = list()
         torch.hub._validate_not_a_forked_repo = (
@@ -279,8 +279,8 @@ class CodecAlignerDataset(Dataset):
                 )
             try:
                 result = norm_wave[
-                    speech_timestamps[0]["start"] : speech_timestamps[-1]["end"]
-                ]
+                         speech_timestamps[0]["start"]: speech_timestamps[-1]["end"]
+                         ]
             except IndexError:
                 print("Audio might be too short to cut silences from front and back.")
                 continue
