@@ -73,7 +73,7 @@ if __name__ == "__main__":
     import time
 
     with torch.inference_mode():
-        test_audio = "../audios/ry.wav"
+        test_audio = "../audios/ry.wavs"
         wav, sr = soundfile.read(test_audio)
         ap = CodecAudioPreprocessor(input_sr=sr)
 
@@ -90,7 +90,7 @@ if __name__ == "__main__":
 
         print(t1 - t0)
         soundfile.write(
-            file=f"../audios/ry_reconstructed_in_{t1 - t0}_descript.wav",
+            file=f"../audios/ry_reconstructed_in_{t1 - t0}_descript.wavs",
             data=audio,
             samplerate=16000,
         )

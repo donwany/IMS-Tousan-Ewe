@@ -66,7 +66,7 @@ def build_path_to_transcript_dict_hui_template(root):
                 if line.strip() != "":
                     norm_transcript = line.split("|")[1]
                     wav_path = os.path.join(
-                        root, el, "wavs", line.split("|")[0] + ".wav"
+                        root, el, "wavs", line.split("|")[0] + ".wavs"
                     )
                     if os.path.exists(wav_path):
                         path_to_transcript[wav_path] = norm_transcript
@@ -124,7 +124,7 @@ def build_path_to_transcript_dict_elizabeth(re_cache=False):
                     if line.strip() != "":
                         norm_transcript = line.split("|")[2]
                         wav_path = os.path.join(
-                            root, el, "wavs", line.split("|")[0] + ".wav"
+                            root, el, "wavs", line.split("|")[0] + ".wavs"
                         )
                         if os.path.exists(wav_path):
                             path_to_transcript[wav_path] = norm_transcript
@@ -142,7 +142,7 @@ def build_path_to_transcript_dict_nancy(re_cache=False):
         for line in lookup.split("\n"):
             if line.strip() != "":
                 norm_transcript = line.split("|")[1]
-                wav_path = os.path.join(root, "wav", line.split("|")[0] + ".wav")
+                wav_path = os.path.join(root, "wavs", line.split("|")[0] + ".wavs")
                 if os.path.exists(wav_path):
                     path_to_transcript[wav_path] = norm_transcript
         torch.save(path_to_transcript, cache_path)
@@ -159,8 +159,9 @@ def build_path_to_transcript_dict_ewe(re_cache=False):
         for line in lookup.split("\n"):
             if line.strip() != "":
                 norm_transcript = line.split("|")[1]
-                wav_path = line.split("|")[0] + ".wav"
-                 #wav_path = os.path.join(root, line.split("|")[0] + ".wav")
+                wav_path = os.path.join(root, "wav", line.split("|")[0] + ".mp3")
+                # print(wav_path)
+                # wav_path = os.path.join(root, line.split("|")[0] + ".mp3")
                 if os.path.exists(wav_path):
                     path_to_transcript[wav_path] = norm_transcript
         torch.save(path_to_transcript, cache_path)
@@ -177,7 +178,7 @@ def build_path_to_transcript_dict_integration_test(re_cache=True):
         for line in lookup.split("\n")[:500]:
             if line.strip() != "":
                 norm_transcript = line.split("|")[1]
-                wav_path = os.path.join(root, "wav", line.split("|")[0] + ".wav")
+                wav_path = os.path.join(root, "wavs", line.split("|")[0] + ".wavs")
                 if os.path.exists(wav_path):
                     path_to_transcript[wav_path] = norm_transcript
         torch.save(path_to_transcript, cache_path)
@@ -204,7 +205,7 @@ def build_path_to_transcript_dict_CREMA_D(re_cache=False):
         }
         path_to_transcript = dict()
         for file in os.listdir(root):
-            if file.endswith(".wav"):
+            if file.endswith(".wavs"):
                 path_to_transcript[root + file] = identifier_to_sent[file.split("_")[1]]
         torch.save(path_to_transcript, cache_path)
     return torch.load(cache_path)
@@ -222,7 +223,7 @@ def build_path_to_transcript_dict_EmoV_DB(re_cache=False):
             if line.strip() != "":
                 identifier_to_sent[line.split()[0]] = " ".join(line.split()[1:])
         for file in os.listdir(root):
-            if file.endswith(".wav"):
+            if file.endswith(".wavs"):
                 path_to_transcript[root + file] = identifier_to_sent[file[-14:-10]]
         torch.save(path_to_transcript, cache_path)
     return torch.load(cache_path)
@@ -238,7 +239,7 @@ def build_path_to_transcript_dict_ryanspeech(re_cache=False):
         for transcript in transcripts:
             if transcript.strip() != "":
                 parsed_line = transcript.split("|")
-                audio_file = f"{root}/wavs/{parsed_line[0]}.wav"
+                audio_file = f"{root}/wavs/{parsed_line[0]}.wavs"
                 path_to_transcript_dict[audio_file] = parsed_line[2]
         torch.save(path_to_transcript_dict, cache_path)
     return torch.load(cache_path)
@@ -284,7 +285,7 @@ def build_path_to_transcript_dict_ESDS(re_cache=False):
                             filename, text, emo_dir = line.split("\t")
                             filename = speaker_dir + "_" + filename.split("_")[1]
                             path_to_transcript_dict[
-                                f"{root}/{speaker_dir}/{emo_dir}/{filename}.wav"
+                                f"{root}/{speaker_dir}/{emo_dir}/{filename}.wavs"
                             ] = text
         torch.save(path_to_transcript_dict, cache_path)
     return torch.load(cache_path)
@@ -348,7 +349,7 @@ def build_path_to_transcript_dict_blizzard_2013(re_cache=False):
                     .replace(" !", "!")
                     .rstrip(" ,")
                 )
-                path_to_transcript[root + "wavn/" + trans_lines[0] + ".wav"] = (
+                path_to_transcript[root + "wavn/" + trans_lines[0] + ".wavs"] = (
                     transcript
                 )
         torch.save(path_to_transcript, cache_path)
@@ -399,7 +400,7 @@ def build_path_to_transcript_dict_libritts_all_clean(re_cache=False):
                             encoding="utf8",
                         ) as tf:
                             transcript = tf.read()
-                        wav_file = file.split(".")[0] + ".wav"
+                        wav_file = file.split(".")[0] + ".wavs"
                         path_to_transcript[
                             os.path.join(path_train, speaker, chapter, wav_file)
                         ] = transcript
@@ -423,7 +424,7 @@ def build_path_to_transcript_dict_libritts_other500(re_cache=False):
                             encoding="utf8",
                         ) as tf:
                             transcript = tf.read()
-                        wav_file = file.split(".")[0] + ".wav"
+                        wav_file = file.split(".")[0] + ".wavs"
                         path_to_transcript[
                             os.path.join(path_train, speaker, chapter, wav_file)
                         ] = transcript
@@ -446,9 +447,9 @@ def build_path_to_transcript_dict_ljspeech(re_cache=False):
             ) as tf:
                 transcript = tf.read()
             wav_path = (
-                "/mount/resources/speech/corpora/LJSpeech/16kHz/wav/"
+                "/mount/resources/speech/corpora/LJSpeech/16kHz/wavs/"
                 + transcript_file.rstrip(".txt")
-                + ".wav"
+                + ".wavs"
             )
             path_to_transcript[wav_path] = transcript
         torch.save(path_to_transcript, cache_path)
@@ -567,7 +568,7 @@ def build_path_to_transcript_dict_thorsten_neutral(re_cache=False):
         trans_lines = transcriptions.split("\n")
         for line in trans_lines:
             if line.strip() != "":
-                path_to_transcript[root + "/wavs/" + line.split("|")[0] + ".wav"] = (
+                path_to_transcript[root + "/wavs/" + line.split("|")[0] + ".wavs"] = (
                     line.split("|")[1]
                 )
         torch.save(path_to_transcript, cache_path)
@@ -590,7 +591,7 @@ def build_path_to_transcript_dict_thorsten_2022_10(re_cache=False):
         trans_lines = transcriptions.split("\n")
         for line in trans_lines:
             if line.strip() != "":
-                path_to_transcript[root + "/wavs/" + line.split("|")[0] + ".wav"] = (
+                path_to_transcript[root + "/wavs/" + line.split("|")[0] + ".wavs"] = (
                     line.split("|")[1]
                 )
         torch.save(path_to_transcript, cache_path)
@@ -607,23 +608,23 @@ def build_path_to_transcript_dict_thorsten_emotional(re_cache=False):
         trans_lines = transcriptions.split("\n")
         for line in trans_lines:
             if line.strip() != "":
-                path_to_transcript[root + "/amused/" + line.split("|")[0] + ".wav"] = (
+                path_to_transcript[root + "/amused/" + line.split("|")[0] + ".wavs"] = (
                     line.split("|")[1]
                 )
-                path_to_transcript[root + "/angry/" + line.split("|")[0] + ".wav"] = (
+                path_to_transcript[root + "/angry/" + line.split("|")[0] + ".wavs"] = (
                     line.split("|")[1]
                 )
                 path_to_transcript[
-                    root + "/disgusted/" + line.split("|")[0] + ".wav"
+                    root + "/disgusted/" + line.split("|")[0] + ".wavs"
                 ] = line.split("|")[1]
-                path_to_transcript[root + "/neutral/" + line.split("|")[0] + ".wav"] = (
+                path_to_transcript[root + "/neutral/" + line.split("|")[0] + ".wavs"] = (
                     line.split("|")[1]
                 )
-                path_to_transcript[root + "/sleepy/" + line.split("|")[0] + ".wav"] = (
+                path_to_transcript[root + "/sleepy/" + line.split("|")[0] + ".wavs"] = (
                     line.split("|")[1]
                 )
                 path_to_transcript[
-                    root + "/surprised/" + line.split("|")[0] + ".wav"
+                    root + "/surprised/" + line.split("|")[0] + ".wavs"
                 ] = line.split("|")[1]
         torch.save(path_to_transcript, cache_path)
     return torch.load(cache_path)
@@ -734,7 +735,7 @@ def build_path_to_transcript_dict_synpaflex_norm_subset(re_cache=False):
                 norm_transcript = file.read()
             path_obj = Path(text_path)
             wav_path = str(
-                (path_obj.parent.parent / path_obj.name[:-9]).with_suffix(".wav")
+                (path_obj.parent.parent / path_obj.name[:-9]).with_suffix(".wavs")
             )
             if Path(wav_path).exists():
                 path_to_transcript[wav_path] = norm_transcript
@@ -760,7 +761,7 @@ def build_path_to_transcript_dict_siwis_subset(re_cache=False):
                 wav_path = str(
                     (
                         path_obj.parent.parent.parent / "wavs" / sd / path_obj.stem
-                    ).with_suffix(".wav")
+                    ).with_suffix(".wavs")
                 )
                 if Path(wav_path).exists():
                     path_to_transcript[wav_path] = norm_transcript
@@ -835,7 +836,7 @@ def build_path_to_transcript_dict_spanish_blizzard_train(re_cache=False):
         for line in lookup.split("\n"):
             if line.strip() != "":
                 norm_transcript = line.split("\t")[1]
-                wav_path = os.path.join(root, "train_wav", line.split("\t")[0] + ".wav")
+                wav_path = os.path.join(root, "train_wav", line.split("\t")[0] + ".wavs")
                 if os.path.exists(wav_path):
                     path_to_transcript[wav_path] = norm_transcript
         torch.save(path_to_transcript, cache_path)
@@ -984,7 +985,7 @@ def build_path_to_transcript_dict_VIVOS_viet(re_cache=False):
         for transcript in transcripts:
             if transcript.strip() != "":
                 parsed_line = transcript.split(" ")
-                audio_file = f"{root}/waves/{parsed_line[0][:10]}/{parsed_line[0]}.wav"
+                audio_file = f"{root}/waves/{parsed_line[0][:10]}/{parsed_line[0]}.wavs"
                 path_to_transcript_dict[audio_file] = " ".join(parsed_line[1:]).lower()
         torch.save(path_to_transcript_dict, cache_path)
     return torch.load(cache_path)
@@ -999,10 +1000,10 @@ def build_path_to_transcript_dict_vietTTS(re_cache=False):
             transcriptions = f.read()
         for line in transcriptions.split("\n"):
             if line.strip() != "":
-                parsed_line = line.split(".wav")
+                parsed_line = line.split(".wavs")
                 audio_path = parsed_line[0]
                 transcript = parsed_line[1]
-                path_to_transcript[os.path.join(root, audio_path + ".wav")] = (
+                path_to_transcript[os.path.join(root, audio_path + ".wavs")] = (
                     transcript.strip()
                 )
         torch.save(path_to_transcript, cache_path)
@@ -1022,7 +1023,7 @@ def build_path_to_transcript_dict_aishell3(re_cache=False):
         for transcript in transcripts:
             if transcript.strip() != "" and not transcript.startswith("#"):
                 parsed_line = transcript.split("|")
-                audio_file = f"{root}/wav/{parsed_line[0][:7]}/{parsed_line[0]}.wav"
+                audio_file = f"{root}/wavs/{parsed_line[0][:7]}/{parsed_line[0]}.wavs"
                 kanji = parsed_line[2]
                 path_to_transcript_dict[audio_file] = kanji
         torch.save(path_to_transcript_dict, cache_path)
@@ -1260,7 +1261,7 @@ def build_path_to_transcript_dict_alffa_sw():
     )
     path_to_transcript.update(
         build_path_to_transcript_dict_kaldi_template(
-            root=root, split="test", replace_in_path=("/my_dir/wav", "test/wav5")
+            root=root, split="test", replace_in_path=("/my_dir/wavs", "test/wav5")
         )
     )
     return path_to_transcript
@@ -1292,7 +1293,7 @@ def build_path_to_transcript_dict_alffa_wo():
                 file = line[0]
                 text = " ".join(line[1:])
                 number = file.split("_")[1]
-                path_to_transcript[str(Path(root, split, number, f"{file}.wav"))] = text
+                path_to_transcript[str(Path(root, split, number, f"{file}.wavs"))] = text
 
     return path_to_transcript
 
@@ -1305,7 +1306,7 @@ def build_path_to_transcript_dict_malayalam():
         with open(Path(root, f"line_index_{gender}.tsv"), "r", encoding="utf-8") as f:
             for line in f:
                 file, text = line.strip().split("\t")
-                path_to_transcript[str(Path(root, gender, f"{file}.wav"))] = text
+                path_to_transcript[str(Path(root, gender, f"{file}.wavs"))] = text
 
     return path_to_transcript
 
@@ -1357,7 +1358,7 @@ def build_path_to_transcript_dict_kaldi_template(root, split, replace_in_path=No
     path_to_transcript = dict()
 
     wav_scp = {}
-    with open(Path(root, split, "wav.scp"), "r") as f:
+    with open(Path(root, split, "wavs.scp"), "r") as f:
         for line in f:
             wav_id, wav_path = line.split()
             if replace_in_path:
@@ -1492,7 +1493,7 @@ def build_path_to_transcript_dict_african_voices_template(root):
             line = line.replace('\\"', "'").split('"')
             text = line[1]
             file = line[0].split()[-1]
-            path_to_transcript[str(Path(root, "wav", f"{file}.wav"))] = text
+            path_to_transcript[str(Path(root, "wavs", f"{file}.wavs"))] = text
 
     return path_to_transcript
 
@@ -2070,7 +2071,7 @@ def build_path_to_transcript_dict_living_audio_dataset_template(root):
     for rec in tree_root.iter("recording_script"):
         for file in rec.iter("fileid"):
             path_to_transcript[
-                str(Path(root, "48000_orig", f'{file.get("id")}.wav'))
+                str(Path(root, "48000_orig", f'{file.get("id")}.wavs'))
             ] = file.text.strip()
 
     return path_to_transcript
@@ -2105,12 +2106,12 @@ def build_path_to_transcript_dict_romanian_db():
                         fileid = "0" + fileid
                     text = line.strip()[5:]
                     if split == "elena":
-                        path = f"ele_{subset}_{fileid}.wav"
+                        path = f"ele_{subset}_{fileid}.wavs"
                     elif split == "georgiana":
-                        path = f"geo_{subset}_{fileid}.wav"
+                        path = f"geo_{subset}_{fileid}.wavs"
                     else:
-                        path = f"adr_{subset}_{fileid}.wav"
-                    path_to_transcript[str(Path(root, split, "wav", subset, path))] = (
+                        path = f"adr_{subset}_{fileid}.wavs"
+                    path_to_transcript[str(Path(root, split, "wavs", subset, path))] = (
                         text
                     )
 
@@ -2125,7 +2126,7 @@ def build_path_to_transcript_dict_shemo():
         data = json.load(f)
 
     for fileid, file_info in data.items():
-        path = Path(root, file_info["gender"], f"{fileid}.wav")
+        path = Path(root, file_info["gender"], f"{fileid}.wavs")
         if path.exists():
             path_to_transcript[str(path)] = file_info["transcript"]
 
@@ -2137,8 +2138,8 @@ def build_path_to_transcript_dict_mslt_template(root, lang="en"):
 
     for split in Path(root).glob("*"):
         if split.is_dir():
-            for audio_file in split.glob("*.wav"):
-                text_file = str(audio_file).replace(f"T0.{lang}.wav", f"T1.{lang}.snt")
+            for audio_file in split.glob("*.wavs"):
+                text_file = str(audio_file).replace(f"T0.{lang}.wavs", f"T1.{lang}.snt")
                 with open(text_file, "r", encoding="utf-16") as f:
                     for line in f:
                         text = line.strip()  # should have only one line
@@ -2192,7 +2193,7 @@ def build_path_to_transcript_dict_cmu_arctic():
                     line = line.replace('\\"', "'").split('"')
                     text = line[1]
                     file = line[0].split()[-1]
-                    path_to_transcript[str(Path(speaker_dir, "wav", f"{file}.wav"))] = (
+                    path_to_transcript[str(Path(speaker_dir, "wavs", f"{file}.wavs"))] = (
                         text
                     )
 
@@ -2220,14 +2221,14 @@ def build_path_to_transcript_dict_clartts():
     with open(Path(root, "training.txt"), "r", encoding="utf-16") as f:
         for line in f:
             fileid, transcript = line.strip().split("|")
-            path_to_transcript[str(Path(root, "wav", "train", f"{fileid}.wav"))] = (
+            path_to_transcript[str(Path(root, "wavs", "train", f"{fileid}.wavs"))] = (
                 transcript
             )
 
     with open(Path(root, "validation.txt"), "r", encoding="utf-16") as f:
         for line in f:
             fileid, transcript = line.strip().split("|")
-            path_to_transcript[str(Path(root, "wav", "val", f"{fileid}.wav"))] = (
+            path_to_transcript[str(Path(root, "wavs", "val", f"{fileid}.wavs"))] = (
                 transcript
             )
 
@@ -2346,7 +2347,7 @@ def build_path_to_transcript_dict_ukrainian_lada():
     with open(Path(root, "metadata.jsonl"), "r", encoding="utf-8") as f:
         for line in f:
             meta = json.loads(line)
-            path_to_transcript[str(Path(root, meta["file"]).with_suffix(".wav"))] = (
+            path_to_transcript[str(Path(root, meta["file"]).with_suffix(".wavs"))] = (
                 meta["orig_text"].strip().replace("\xad", "")
             )
 
@@ -2368,7 +2369,7 @@ def build_path_to_transcript_dict_m_ailabs_template(root):
                 ) as f:
                     for line in f:
                         fileid, text, text_norm = line.strip().split("|")
-                        path = Path(speaker_dir, "wavs", f"{fileid}.wav")
+                        path = Path(speaker_dir, "wavs", f"{fileid}.wavs")
                         if path.exists():
                             path_to_transcript[str(path)] = text_norm
             else:
@@ -2381,7 +2382,7 @@ def build_path_to_transcript_dict_m_ailabs_template(root):
                     ) as f:
                         for line in f:
                             fileid, text, text_norm = line.strip().split("|")
-                            path = Path(session_dir, "wavs", f"{fileid}.wav")
+                            path = Path(session_dir, "wavs", f"{fileid}.wavs")
                             if path.exists():
                                 path_to_transcript[str(path)] = text_norm
 
@@ -2490,7 +2491,7 @@ def build_path_to_transcript_dict_mms_template(
     i = 0
     with open(Path(root, "bible_texts", f"{lang}.txt"), "r", encoding="utf-8") as f:
         for line in f:
-            path = Path(root, "bible_audios", lang, f"{i}.wav")
+            path = Path(root, "bible_audios", lang, f"{i}.wavs")
             if path.exists():
                 path_to_transcript[str(path)] = line.strip()
                 i += 1

@@ -24,7 +24,7 @@ from TrainingPipelines.finetuning_example_simple import (
 
 # import this
 from TrainingPipelines.finetuning_example_simple_ewe import (
-    run as fine_tuning_example_simple_ewe,
+    run as fine_tuning_example_simple_ewe
 )
 
 pipeline_dict = {

@@ -233,21 +233,21 @@ def run(
                                 "If you can read this, the directories were more nested than I thought."
                             )
                         else:
-                            if c.endswith(".wav") or c.endswith(".flac"):
+                            if c.endswith(".wavs") or c.endswith(".flac"):
                                 _, sr = sf.read(os.path.join(root, a, b, c))
                                 if sr >= 24000 or take_all:
                                     file_lists_for_this_run_combined.append(
                                         os.path.join(root, a, b, c)
                                     )
                 else:
-                    if b.endswith(".wav") or b.endswith(".flac"):
+                    if b.endswith(".wavs") or b.endswith(".flac"):
                         _, sr = sf.read(os.path.join(root, a, b))
                         if sr >= 24000 or take_all:
                             file_lists_for_this_run_combined.append(
                                 os.path.join(root, a, b)
                             )
         else:
-            if a.endswith(".wav") or a.endswith(".flac"):
+            if a.endswith(".wavs") or a.endswith(".flac"):
                 _, sr = sf.read(os.path.join(root, a))
                 if sr >= 24000 or take_all:
                     file_lists_for_this_run_combined.append(os.path.join(root, a))

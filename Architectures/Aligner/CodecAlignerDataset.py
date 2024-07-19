@@ -37,7 +37,8 @@ class CodecAlignerDataset(Dataset):
         self.gpu_count = gpu_count
         self.rank = rank
         if (
-                not os.path.exists(os.path.join(cache_dir, "aligner_train_cache.pt"))
+                not os.path.exists(os.path.join(
+                    cache_dir, "aligner_train_cache.pt"))
                 or rebuild_cache
         ):
             self._build_dataset_cache(
@@ -71,11 +72,11 @@ class CodecAlignerDataset(Dataset):
                 )  # a bit unfortunate, but if you're using multiple GPUs, you probably have a ton of datapoints anyway.
             chunksize = int(len(self.datapoints) / self.gpu_count)
             self.datapoints = self.datapoints[
-                              chunksize * self.rank: chunksize * (self.rank + 1)
-                              ]
+                chunksize * self.rank: chunksize * (self.rank + 1)
+            ]
             self.speaker_embeddings = self.speaker_embeddings[
-                                      chunksize * self.rank: chunksize * (self.rank + 1)
-                                      ]
+                chunksize * self.rank: chunksize * (self.rank + 1)
+            ]
         print(
             f"Loaded an Aligner dataset with {len(self.datapoints)} datapoints from {cache_dir}."
         )
@@ -109,7 +110,8 @@ class CodecAlignerDataset(Dataset):
             )  # in this case we passed a function instead of the dict, so that the function isn't executed if not necessary.
         torch.multiprocessing.set_start_method("spawn", force=True)
         resource_manager = Manager()
-        self.path_to_transcript_dict = resource_manager.dict(path_to_transcript_dict)
+        self.path_to_transcript_dict = resource_manager.dict(
+            path_to_transcript_dict)
         key_list = list(self.path_to_transcript_dict.keys())
         with open(
                 os.path.join(cache_dir, "files_used.txt"), encoding="utf8", mode="w"
@@ -125,11 +127,11 @@ class CodecAlignerDataset(Dataset):
         for i in range(loading_processes):
             key_splits.append(
                 key_list[
-                i
-                * len(key_list)
-                // loading_processes: (i + 1)
-                                      * len(key_list)
-                                      // loading_processes
+                    i
+                    * len(key_list)
+                    // loading_processes: (i + 1)
+                    * len(key_list)
+                    // loading_processes
                 ]
             )
         for key_split in key_splits:
@@ -243,19 +245,25 @@ class CodecAlignerDataset(Dataset):
         for path in tqdm(path_list):
             if self.path_to_transcript_dict[path].strip() == "":
                 continue
-
             try:
                 wave, sr = sf.read(path)
+                print(wave.shape)
             except:
                 print(f"Problem with an audio file: {path}")
                 continue
-
+            # the audio is in stereo, so we need to merge the channels.
+            if len(wave.shape) > 1:
+                # let's figure out whether the axes are switched, which seems to be the case sometimes
+                if len(wave[0]) == 2:
+                    # if yes, we switch the axes into the order librosa's to_mono function expects.
+                    wave = wave.transpose()
             wave = librosa.to_mono(wave)
-
+            print(wave.shape)
             if sr != assumed_sr:
                 assumed_sr = sr
                 ap = CodecAudioPreprocessor(input_sr=assumed_sr, device=device)
-                resample = Resample(orig_freq=assumed_sr, new_freq=16000).to(device)
+                resample = Resample(orig_freq=assumed_sr,
+                                    new_freq=16000).to(device)
                 print(
                     f"{path} has a different sampling rate --> adapting the codec processor"
                 )
@@ -279,8 +287,8 @@ class CodecAlignerDataset(Dataset):
                 )
             try:
                 result = norm_wave[
-                         speech_timestamps[0]["start"]: speech_timestamps[-1]["end"]
-                         ]
+                    speech_timestamps[0]["start"]: speech_timestamps[-1]["end"]
+                ]
             except IndexError:
                 print("Audio might be too short to cut silences from front and back.")
                 continue
@@ -318,7 +326,8 @@ class CodecAlignerDataset(Dataset):
                 continue
 
             cached_speech = (
-                ap.audio_to_codebook_indexes(audio=wave, current_sampling_rate=16000)
+                ap.audio_to_codebook_indexes(
+                    audio=wave, current_sampling_rate=16000)
                 .transpose(0, 1)
                 .cpu()
                 .numpy()

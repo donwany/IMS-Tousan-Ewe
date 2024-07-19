@@ -90,10 +90,10 @@ if __name__ == "__main__":
     import time
 
     with torch.inference_mode():
-        test_audio1 = "../audios/ad01_0000.wav"
-        test_audio2 = "../audios/angry.wav"
-        test_audio3 = "../audios/ry.wav"
-        test_audio4 = "../audios/test.wav"
+        test_audio1 = "../audios/ad01_0000.wavs"
+        test_audio2 = "../audios/angry.wavs"
+        test_audio3 = "../audios/ry.wavs"
+        test_audio4 = "../audios/test.wavs"
         ap = CodecAudioPreprocessor(
             input_sr=1,
             path_to_model="Codec/HiFi-Codec-16k-320d.pt",
@@ -125,22 +125,22 @@ if __name__ == "__main__":
 
         print(t1 - t0)
         soundfile.write(
-            file=f"../audios/1_reconstructed_in_{t1 - t0}_hifi.wav",
+            file=f"../audios/1_reconstructed_in_{t1 - t0}_hifi.wavs",
             data=audio1,
             samplerate=16000,
         )
         soundfile.write(
-            file=f"../audios/2_reconstructed_in_{t1 - t0}_hifi.wav",
+            file=f"../audios/2_reconstructed_in_{t1 - t0}_hifi.wavs",
             data=audio2,
             samplerate=16000,
         )
         soundfile.write(
-            file=f"../audios/3_reconstructed_in_{t1 - t0}_hifi.wav",
+            file=f"../audios/3_reconstructed_in_{t1 - t0}_hifi.wavs",
             data=audio3,
             samplerate=16000,
         )
         soundfile.write(
-            file=f"../audios/4_reconstructed_in_{t1 - t0}_hifi.wav",
+            file=f"../audios/4_reconstructed_in_{t1 - t0}_hifi.wavs",
             data=audio4,
             samplerate=16000,
         )

@@ -188,7 +188,7 @@ class CodecSimulator(torch.nn.Module):
 if __name__ == "__main__":
     import matplotlib.pyplot as plt
 
-    wav, sr = sf.read("../../audios/speaker_references/female_high_voice.wav")
+    wav, sr = sf.read("../../audios/speaker_references/female_high_voice.wavs")
     resampled_wave = torch.Tensor(librosa.resample(y=wav, orig_sr=sr, target_sr=24000))
     audio = torch.tensor(resampled_wave)
     melspec_ap = AudioPreprocessor(input_sr=24000, output_sr=16000, cut_silence=False)

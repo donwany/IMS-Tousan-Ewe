@@ -166,7 +166,7 @@ class LogMelSpec(torch.nn.Module):
 if __name__ == "__main__":
     import soundfile
 
-    wav, sr = soundfile.read("../audios/ad00_0004.wav")
+    wav, sr = soundfile.read("../audios/ad00_0004.wavs")
     ap = AudioPreprocessor(input_sr=sr, output_sr=16000, cut_silence=True)
     import matplotlib.pyplot as plt
 
